@@ -22,8 +22,10 @@
     font-weight: 400;
     line-height: 58px;
     color: #fff;
+    letter-spacing: -0.04em;
     text-align: center;
 }
+
 
 @media screen and (min-width: 768px) and (max-width: 1024px) {
 

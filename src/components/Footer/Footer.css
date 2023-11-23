@@ -1,5 +1,5 @@
 .footer {
-    padding: 64px 70px 20px;
+    padding: 78px 70px 20px;
     background-color: #202020;
 }
 
@@ -46,8 +46,7 @@
 
 @media screen and (min-width: 768px) and (max-width: 1024px) {
     .footer {
-        padding: 66px 30px 20px;
-
+        padding: 156px 30px 20px;
     }
 }
 

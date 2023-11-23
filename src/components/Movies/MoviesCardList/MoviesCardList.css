@@ -10,17 +10,19 @@
     flex-wrap: wrap;
     justify-content: space-between;
     box-sizing: border-box;
-    margin-top: 79px;
+    margin-top: 80px;
+    margin-bottom: 0;
     padding-left: 0;
     list-style-type: none;
 }
 
 .movies-card-list__expand {
+    cursor: pointer;
     align-self: center;
     box-sizing: border-box;
     width: 320px;
     height: 36px;
-    margin: 50px 0 81px;
+    margin: 30px 0 81px;
     background: #202020;
     border: 1px solid #424242;
     border-radius: 6px;
