@@ -50,7 +50,7 @@ const App = () => {
     <CurrentUserContext.Provider value={currentUser}>
       <UserAgentContext.Provider value={device}>
         <Suspense fallback={<Preloader/>}>
-        <section className="app">
+        <div className="app">
             <Routes>
               <Route
                 path='/'
@@ -69,7 +69,7 @@ const App = () => {
                 element={<Profile onLogout={handleLogout} />}
               />
               <Route
-                path='/sign-up'
+                path='/signup'
                 element={
                   <Register
                     onLogin={handleLogin}
@@ -78,7 +78,7 @@ const App = () => {
                 }
               />
               <Route
-                path='/sign-in'
+                path='/signin'
                 element={
                   <Login
                     onLogin={handleLogin}
@@ -91,7 +91,7 @@ const App = () => {
                 element={<NotFound />}
               />
             </Routes>
-          </section>  
+          </div>  
         </Suspense>
       </UserAgentContext.Provider>
     </CurrentUserContext.Provider>

@@ -17,21 +17,21 @@ function SearchForm() {
           className='search-form__input'
           required
         />
-        <button className='search-form__button'></button>
+        <button type="submit" className='search-form__button'></button>
       </form>
       <label className='search-form__filter'>
-          <input
-            type='checkbox'
-            className='search-form__tumbler'
-            checked={checked}
-            onChange={handleChange}
-          />
-          <span
-            className='search-form__tumbler-visible'
-            hidden
-          ></span>
-          <p className='search-form__filter-name'>Короткометражки</p>
-        </label>
+        <input
+          type='checkbox'
+          className='search-form__tumbler'
+          checked={checked}
+          onChange={handleChange}
+        />
+        <span
+          className='search-form__tumbler-visible'
+          hidden
+        ></span>
+        <p className='search-form__filter-name'>Короткометражки</p>
+      </label>
     </section>
   );
 }

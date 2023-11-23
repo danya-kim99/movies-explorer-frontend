@@ -2,8 +2,8 @@
     display: flex;
     justify-content: center;
     gap: 10px;
-    margin: 0;
-    padding: 30px 0;
+    margin: 0 0 30px 0;
+    padding: 0;
     list-style: none;
 }
 
@@ -26,11 +26,15 @@
     text-decoration: none;
 }
 
-@media screen and (max-width: 768px) {
+@media screen and (max-width: 767px) {
     .navtab__link {
         min-width: 82px;
         min-height: 26px;
         padding: 0;
+        margin: 0;
         font-size: 10px;
+    }
+    .navtab__content {
+        margin: 0 0 20px 0;
     }
 }

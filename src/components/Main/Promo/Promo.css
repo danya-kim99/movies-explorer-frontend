@@ -7,7 +7,7 @@
     display: flex;
     flex-direction: column;
     max-width: 1200px;
-    min-height: 524px;
+    min-height: 493px;
     margin: auto;
     background-color: #272727;
     border-radius: 10px;
@@ -55,8 +55,8 @@
 
 .promo__title {
     max-width: 292px;
-    padding-top: 30px;
-    font-size: 29px;
+    padding-top: 20px;
+    font-size: 28px;
     line-height: 37px;
     }
 }

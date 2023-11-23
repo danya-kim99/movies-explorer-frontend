@@ -43,6 +43,8 @@ const Auth = ({ isLoginForm, onLogin, onRegister }) => {
         handleChange={handleChange}
         values={values}
         errors={errors}
+        minLength={2}
+        maxLength={30}
       />
       {false && <p className='form__error'> //заглушка
         Что-то пошло не так...
@@ -58,7 +60,7 @@ const Auth = ({ isLoginForm, onLogin, onRegister }) => {
           <>
             Уже зарегистрированы?
             <Link
-              to='/sign-in'
+              to='/signin'
               className='form__link'
             >
               Войти
@@ -68,7 +70,7 @@ const Auth = ({ isLoginForm, onLogin, onRegister }) => {
           <>
             Еще не зарегистрированы?
             <Link
-              to='/sign-up'
+              to='/signup'
               className='form__link'
             >
               Регистрация

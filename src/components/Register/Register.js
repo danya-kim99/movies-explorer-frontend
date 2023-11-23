@@ -12,7 +12,7 @@ const Register = ({ onLogin, onRegister }) => {
         className='register__logo'
         onClick={() => navigate('/')}
       ></a>
-      <h2 className='register__title'>Добро пожаловать!</h2>
+      <h1 className='register__title'>Добро пожаловать!</h1>
       <AuthForm isLoginForm={false} onLogin={onLogin} onRegister={onRegister} />
     </main>
   );

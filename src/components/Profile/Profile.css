@@ -54,6 +54,10 @@
     text-align: right;
 }
 
+.profile__input:focus {
+    border: 0.5px solid #fff;
+}
+
 .profile__span-error {
     min-height: 16px;
     padding: 0;

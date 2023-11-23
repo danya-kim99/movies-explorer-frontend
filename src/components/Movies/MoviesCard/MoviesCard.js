@@ -28,7 +28,7 @@ function MoviesCard(props) {
         <img
           className='movie__picture'
           src={props.card.image}
-          alt='Фильм'
+          alt={`Фильм под названием ${props.card.nameRU}`}
         />
         <button
           className={cardButtonClassName}

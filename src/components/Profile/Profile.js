@@ -25,7 +25,7 @@ const Profile = ({ onLogout }) => {
     <>
       <Header />
       <main className='profile'>
-        <h2 className='profile__name'>Привет, {currentUser.name}!</h2>
+        <h1 className='profile__name'>Привет, {currentUser.name}!</h1>
         <form
           name='profile'
           className='profile__form'
@@ -43,6 +43,7 @@ const Profile = ({ onLogout }) => {
               minLength={2}
               maxLength={30}
               required
+              placeholder='Ваше имя'
             />
           </label>
           <span className='profile__span-error'>{errors.name}</span>
@@ -56,6 +57,7 @@ const Profile = ({ onLogout }) => {
               onFocus={handleEditButtonClick}
               value={values.email}
               required
+              placeholder='Ваш E-mail'
             />
           </label>
           <span className='profile__span-error'>{errors.email}</span>
