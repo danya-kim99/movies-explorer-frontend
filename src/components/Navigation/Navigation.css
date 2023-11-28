@@ -1,0 +1,20 @@
+.header__navigation {
+    width: 44px;
+    height: 44px;
+    margin-left: auto;
+    padding: 0;
+    background: url(../../images/menu_icon.svg) no-repeat center;
+    cursor: pointer;
+    border: none;
+}
+
+
+
+@media screen and (max-width: 767px) {
+
+.header__navigation {
+        width: 40px;
+        height: 43px;
+        background-size: 40px 43px;
+    }
+}

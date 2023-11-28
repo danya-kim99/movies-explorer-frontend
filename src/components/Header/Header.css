@@ -1,0 +1,44 @@
+.header {
+    display: flex;
+    align-items: center;
+    gap: 43px;
+    padding: 5px 70px;
+}
+
+.header__logo {
+    margin-inline-start: 0px;
+    margin-inline-end: 0px;
+    min-width: 38px;
+    min-height: 38px;
+    background: url(../../images/logo_icon.svg) no-repeat center;
+    background-size: 38px 38px;
+    cursor: pointer;
+}
+
+
+@media screen and (min-width: 769px) and (max-width: 1024px) {
+
+.header {
+        padding: 18px 30px;
+    }
+}
+
+@media screen and (max-width: 768px) {
+
+.header {
+        padding: 0px 26px;
+    }
+
+.header__logo {
+        margin-inline-start: 0;
+        margin-right: 0;
+        margin-bottom: 20px;
+    }
+}
+
+@media screen and (max-width: 320px) {
+
+.header {
+        padding: 0px 15px;
+    }
+}
