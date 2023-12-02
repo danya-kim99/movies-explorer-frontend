@@ -1,12 +1,17 @@
-import React, { useState } from 'react';
+import React, { useState, useContext, useEffect } from 'react';
 import './Profile.css';
 import Header from '../Header/Header';
 import Validation from '../../utils/Validation';
 import { CurrentUserContext } from "../../contexts/CurrentUserContext";
 
-const Profile = ({ onLogout }) => {
-  const currentUser = React.useContext(CurrentUserContext);
-  const { values, errors, isValid, handleChange } = Validation({
+function Profile({
+  handleUpdateUserInfo,
+  isFormSubmitting,
+  handleSignOut,
+}) {
+  const currentUser = useContext(CurrentUserContext);
+
+  const { values, errors, isValid, handleChange, setValues } = Validation({
     name: currentUser.name,
     email: currentUser.email,
   });
@@ -17,10 +22,24 @@ const Profile = ({ onLogout }) => {
     setShowSaveButton(true);
   };
 
+  useEffect(() => {
+    setValues({
+      ...values,
+      name: currentUser.name || "",
+      email: currentUser.email || "",
+    });
+  }, [currentUser, setValues]);
+
   const handleSubmit = (evt) => {
     evt.preventDefault();
-    setServerResError(true);
+    if (isValid) {
+      handleUpdateUserInfo(values);
+      console.log(values)
+    } else {
+      setServerResError(true);
+    }
   };
+
   return (
     <>
       <Header />
@@ -44,6 +63,7 @@ const Profile = ({ onLogout }) => {
               maxLength={30}
               required
               placeholder='Ваше имя'
+              disabled={isFormSubmitting}
             />
           </label>
           <span className='profile__span-error'>{errors.name}</span>
@@ -51,6 +71,7 @@ const Profile = ({ onLogout }) => {
             <span className='profile__input-title'>E-mail</span>
             <input
               className='profile__input'
+              pattern={"[a-zA-Z0-9_.]+@[a-zA-Z0-9_]+\\.[a-z]{2,}"}
               type='email'
               name='email'
               onChange={handleChange}
@@ -58,6 +79,7 @@ const Profile = ({ onLogout }) => {
               value={values.email}
               required
               placeholder='Ваш E-mail'
+              disabled={isFormSubmitting}
             />
           </label>
           <span className='profile__span-error'>{errors.email}</span>
@@ -83,7 +105,7 @@ const Profile = ({ onLogout }) => {
               <button
                 type='button'
                 className='profile__button profile__button_logout'
-                onClick={onLogout}
+                onClick={() => handleSignOut()}
               >
                 Выйти из аккаунта
               </button>

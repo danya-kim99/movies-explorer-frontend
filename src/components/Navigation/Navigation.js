@@ -6,7 +6,7 @@ import { UserAgentContext } from '../../contexts/UserAgentContext';
 import { useLocation } from 'react-router-dom';
 import AuthNavigation from './AuthNavigation/AuthNavigation';
 
-const Navigation = () => {
+  const Navigation = ({isLoggedIn}) => {
   const location = useLocation();
   const [menuActive, setMenuActive] = useState(false);
   const device = useContext(UserAgentContext);
@@ -27,7 +27,7 @@ const Navigation = () => {
 
   return (
     <>
-      {location.pathname === '/' ? (
+      {(location.pathname === '/' && !isLoggedIn) ? (
         <AuthNavigation />
       ) : (
         <>

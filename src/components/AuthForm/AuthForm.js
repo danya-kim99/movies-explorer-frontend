@@ -4,13 +4,14 @@ import { Link } from 'react-router-dom';
 import Validation from '../../utils/Validation';
 import FormLabel from './FormLabel/FormLabel';
 
-const Auth = ({ isLoginForm, onLogin, onRegister }) => {
-  const { values, errors, isValid, handleChange, resetForm } = Validation();
+const AuthForm = ({ isLoginForm, onLogin, onRegister, isSuccess }) => {
+  const { values, errors, isValid, handleChange } = Validation();
 
-  const handleSubmit = (evt) => {
-    evt.preventDefault();
-    resetForm();
-    isLoginForm ? onLogin() : onRegister();
+  console.log(isSuccess)
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    isLoginForm ? onLogin(values) : onRegister(values);
   };
 
   return (
@@ -24,7 +25,7 @@ const Auth = ({ isLoginForm, onLogin, onRegister }) => {
           title='Имя'
           name='name'
           handleChange={handleChange}
-          values={values}
+          values={values.name}
           errors={errors}
           minLength={2}
           maxLength={30}
@@ -34,19 +35,19 @@ const Auth = ({ isLoginForm, onLogin, onRegister }) => {
         title='E-mail'
         name='email'
         handleChange={handleChange}
-        values={values}
+        values={values.email}
         errors={errors}
       />
       <FormLabel
         title='Пароль'
         name='password'
         handleChange={handleChange}
-        values={values}
+        values={values.password}
         errors={errors}
         minLength={2}
         maxLength={30}
       />
-      {false && <p className='form__error'> //заглушка
+      {!isSuccess && <p className='form__error'>
         Что-то пошло не так...
       </p>}
       <button
@@ -82,4 +83,4 @@ const Auth = ({ isLoginForm, onLogin, onRegister }) => {
   );
 };
 
-export default Auth;
+export default AuthForm;

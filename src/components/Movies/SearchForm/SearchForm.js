@@ -1,21 +1,59 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { useLocation } from "react-router-dom";
 import './SearchForm.css';
 
-function SearchForm() {
-  const [checked, setChecked] = useState(false);
+function SearchForm({
+  handleSearchMoviesFilms,
+  handleShortFilmToggle,
+  isShortFilm,
+}) {
 
-  const handleChange = () => {
-    setChecked(!checked);
-  };
+  const [isQueryError, setIsQueryError] = useState(false);
+  const [query, setQuery] = useState("");
+  const location = useLocation();
+
+  const handleChangeInputQuery = (e) => {
+    setQuery(e.target.value);
+  }
+
+  const setShortFilmToggle = () => {
+    setQuery(query);
+    handleShortFilmToggle(query);
+  }
+
+  const handleFormSubmit = (e) => {
+    e.preventDefault();
+    if (query.trim().length === 0) {
+      setIsQueryError(true);
+    } else {
+      setIsQueryError(false);
+      handleSearchMoviesFilms(query);
+    }
+  }
+
+  useEffect(() => {
+    if (
+      location.pathname === "/movies" &&
+      localStorage.getItem("movieSearch")
+    ) {
+      const localQuery = localStorage.getItem("movieSearch");
+      setQuery(localQuery);
+    } else {
+      setQuery('')
+    }
+  }, [location]);
 
   return (
     <section className='search-form'>
-      <form className='search-form__all'>
+      <form className='search-form__all' onSubmit={handleFormSubmit}>
         <input
           type='text'
           placeholder='Фильм'
+          id='search-movie'
           className='search-form__input'
           required
+          onChange={handleChangeInputQuery}
+          value={query || ""}
         />
         <button type="submit" className='search-form__button'></button>
       </form>
@@ -23,8 +61,8 @@ function SearchForm() {
         <input
           type='checkbox'
           className='search-form__tumbler'
-          checked={checked}
-          onChange={handleChange}
+          checked={isShortFilm}
+          onChange={setShortFilmToggle}
         />
         <span
           className='search-form__tumbler-visible'
