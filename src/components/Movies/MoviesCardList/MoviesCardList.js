@@ -2,7 +2,8 @@ import React, { useEffect, useState } from "react";
 import { useLocation } from 'react-router-dom';
 import MoviesCard from '../MoviesCard/MoviesCard';
 import Preloader from '../Preloader/Preloader';
-import { UserAgentContext, userAgent } from '../../../contexts/UserAgentContext';
+import { UserAgentContext } from '../../../contexts/UserAgentContext';
+import { userAgent } from "../../../utils/constants";
 import './MoviesCardList.css';
 
 function MoviesCardList({
@@ -19,9 +20,9 @@ function MoviesCardList({
 
   const shownCount = () => {
     const display = window.innerWidth;
-    if (display > userAgent.desktop.resolution) {
+    if (display >= userAgent.desktop.resolution) {
       setShownMovies(userAgent.desktop.movies);
-    } else if (display > userAgent.tablet.resolution) {
+    } else if (display >= userAgent.tablet.resolution) {
       setShownMovies(userAgent.tablet.movies);
     } else {
       setShownMovies(userAgent.mobile.movies);
@@ -31,11 +32,6 @@ function MoviesCardList({
   useEffect(() => {
     shownCount();
   }, []);
-  useEffect(() => {
-    setTimeout(() => {
-      window.addEventListener("resize", shownCount);
-    }, 500);
-  });
 
   const showMore = () => {
     const display = window.innerWidth;
@@ -49,15 +45,18 @@ function MoviesCardList({
   }
 
   const getSavedMovieCard = (savedMovies, card) => {
-    return savedMovies.length > 0 ? savedMovies.find((m) => m.movieId === card.id) : false;
+    return !!savedMovies?.find((m) => m.movieId === card.id);
   }
 
   return (
     <section className='movies-card-list'>
+
+
       <ul className='movies-card-list__container'>
         {isLoading && <Preloader />}
+        {movies.length === 0 && <p className='movies-card-list__nothing'>Ничего не найдено.</p>}
         {currentPath === "/saved-movies" ? (
-          movies.map(movie => (
+          movies.slice(0, shownMovies).map(movie => (
             <MoviesCard
               key={isSavedMovies ? movie._id : movie.id}
               saved={getSavedMovieCard(savedMovies, movie)}

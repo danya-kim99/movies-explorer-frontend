@@ -121,7 +121,7 @@ function Movies({
         <SearchForm
           handleSearchMoviesFilms={handleSearchMoviesFilms}
           handleShortFilmToggle={handleShortFilmToggle}
-          isShortFilm={isNotShortFilm}
+          isShortFilm={!isNotShortFilm}
         />
         <MoviesCardList
           movies={filteredMovies}

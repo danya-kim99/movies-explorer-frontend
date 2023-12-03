@@ -45,7 +45,7 @@ function SearchForm({
 
   return (
     <section className='search-form'>
-      <form className='search-form__all' onSubmit={handleFormSubmit}>
+      <form noValidate className='search-form__all' onSubmit={handleFormSubmit} >
         <input
           type='text'
           placeholder='Фильм'
@@ -57,6 +57,7 @@ function SearchForm({
         />
         <button type="submit" className='search-form__button'></button>
       </form>
+      {isQueryError && <p className='search-form__error'>Нужно ввести ключевое слово</p>}
       <label className='search-form__filter'>
         <input
           type='checkbox'

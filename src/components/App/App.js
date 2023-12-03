@@ -1,9 +1,10 @@
 import { Route, Routes, useNavigate, useLocation } from 'react-router-dom';
 import { Suspense, useEffect, useState } from 'react';
 import { CurrentUserContext } from '../../contexts/CurrentUserContext';
-import { UserAgentContext, userAgent } from '../../contexts/UserAgentContext';
+import { UserAgentContext } from '../../contexts/UserAgentContext';
 import { moviesApi } from "../../utils/MoviesApi";
 import { mainApi } from '../../utils/MainApi';
+import { userAgent } from '../../utils/constants';
 import filterMovies from '../../utils/filterMovies';
 import ProtectedRoute from "../ProtectedRoute/ProtectedRoute";
 import Preloader from '../Movies/Preloader/Preloader';
@@ -38,7 +39,7 @@ const App = () => {
             setCurrentUser(res);
             setisLoggedIn(true);
             navigate(currentLocation.pathname, { replace: true });
-            
+
           }
         })
         .catch(() => {
@@ -69,7 +70,7 @@ const App = () => {
   }, [device]);
 
   const handleLogin = (values) => {
-    const { email, password  } = values;
+    const { email, password } = values;
     mainApi.authorize(email, password)
       .then((res) => {
         localStorage.setItem('token', res.token);
@@ -81,21 +82,19 @@ const App = () => {
         console.error(error);
         setIsSuccess(false);
       })
-    
-    navigate('/movies', { replace: true });
   };
   const handleRegister = (values) => {
     const { name, email, password } = values;
     mainApi.register(name, email, password)
-      .then((res) => {
-        localStorage.setItem('token', res.token);
-        navigate('/signin');
+      .then(() => {
         setIsSuccess(true);
+        handleLogin(values);
       })
       .catch((error) => {
         console.error(error);
       })
-    
+
+
   };
   const handleLogout = () => {
     localStorage.removeItem('token');
@@ -131,12 +130,11 @@ const App = () => {
 
   const handleUpdateUserInfo = (newData) => {
     setIsFormSubmitting(true);
-    console.log(newData)
     mainApi
       .patchProfileInfo(newData)
       .then((data) => {
         setIsSuccess(true);
-        setCurrentUser(data);
+        setCurrentUser(data.data);
       })
       .catch((err) => {
         setIsSuccess(false);
@@ -148,7 +146,6 @@ const App = () => {
   }
 
   const handleSaveMovie = (movie) => {
-    console.log(movie)
     mainApi
       .postMovie(movie)
       .then((newMovie) => {
@@ -182,9 +179,10 @@ const App = () => {
             <Routes>
               <Route
                 path='/'
-                element={<ProtectedRoute
-                  element={Main}
-                  isLoggedIn={isLoggedIn} />}
+                element={
+                  <Main
+                    isLoggedIn={isLoggedIn}
+                  />}
               />
               <Route
                 path='/movies'
@@ -214,7 +212,9 @@ const App = () => {
                   isLoggedIn={isLoggedIn}
                   isFormSubmitting={isFormSubmitting}
                   handleSignOut={handleLogout}
-                  handleUpdateUserInfo={handleUpdateUserInfo} />}
+                  handleUpdateUserInfo={handleUpdateUserInfo}
+                  isSuccess={isSuccess}
+                />}
               />
               <Route
                 path='/signup'

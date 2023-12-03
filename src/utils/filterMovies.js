@@ -11,10 +11,10 @@ export function filterDuration(movies) {
 export function filterMovies(movies, query) {
     const filteredMovies = movies?.filter((i) => {
         const { nameRU, nameEN } = i;
-        const lowercaseQuery = query.toLowerCase();
+        const lowercaseQuery = query?.toLowerCase();
         return (
-            nameRU.toLowerCase().includes(lowercaseQuery)
-            || nameEN.toLowerCase().includes(lowercaseQuery)
+            nameRU?.toLowerCase().includes(lowercaseQuery)
+            || nameEN?.toLowerCase().includes(lowercaseQuery)
         );
     })
 

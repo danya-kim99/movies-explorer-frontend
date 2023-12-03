@@ -2,12 +2,14 @@ import React, { useState, useContext, useEffect } from 'react';
 import './Profile.css';
 import Header from '../Header/Header';
 import Validation from '../../utils/Validation';
+import { emailValidationRegexp } from '../../utils/constants';
 import { CurrentUserContext } from "../../contexts/CurrentUserContext";
 
 function Profile({
   handleUpdateUserInfo,
   isFormSubmitting,
   handleSignOut,
+  isSuccess
 }) {
   const currentUser = useContext(CurrentUserContext);
 
@@ -15,18 +17,22 @@ function Profile({
     name: currentUser.name,
     email: currentUser.email,
   });
-  const [serverResError, setServerResError] = useState(false);
   const [isShowSaveButton, setShowSaveButton] = useState(false);
+  const [showSuccess, setShowSuccess] = useState(false);
 
   const handleEditButtonClick = () => {
     setShowSaveButton(true);
   };
 
+  const handleShowSuccess = () => {
+    setShowSuccess(true);
+  };
+
   useEffect(() => {
     setValues({
       ...values,
-      name: currentUser.name || "",
-      email: currentUser.email || "",
+      name: currentUser.name,
+      email: currentUser.email,
     });
   }, [currentUser, setValues]);
 
@@ -34,9 +40,9 @@ function Profile({
     evt.preventDefault();
     if (isValid) {
       handleUpdateUserInfo(values);
-      console.log(values)
+      handleShowSuccess()
     } else {
-      setServerResError(true);
+      isSuccess=!isSuccess;
     }
   };
 
@@ -71,7 +77,7 @@ function Profile({
             <span className='profile__input-title'>E-mail</span>
             <input
               className='profile__input'
-              pattern={"[a-zA-Z0-9_.]+@[a-zA-Z0-9_]+\\.[a-z]{2,}"}
+              pattern={emailValidationRegexp}
               type='email'
               name='email'
               onChange={handleChange}
@@ -83,13 +89,17 @@ function Profile({
             />
           </label>
           <span className='profile__span-error'>{errors.email}</span>
-          <p className='profile__error'>
-            {serverResError && 'При обновлении профиля произошла ошибка.'}
-          </p>
+          {!isSuccess && <p className='profile__error'>
+            {!isSuccess && 'При обновлении профиля произошла ошибка.'}
+          </p>}
+          {isSuccess && <p className='profile__success'>
+            {showSuccess && 'Профиль успешно обновлён!'}
+          </p>}
           {isShowSaveButton ? (
             <button
               type='submit'
               className='profile__button profile__button_submit'
+              disabled={!isValid}
             >
               Сохранить
             </button>

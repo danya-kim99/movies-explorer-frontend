@@ -15,7 +15,7 @@ function SavedMovies({
 
   const [filteredMovies, setFilteredMovies] = useState(savedMovies);
   const [isShortFilm, setIsShortFilm] = useState(false);
-  const [searchQuery, setSearchQuery] = useState("");
+  const [searchQuery, setSearchQuery] = useState('');
 
   const handleUpdateFilteredMovies = (movies, query, short) => {
     const moviesCardList = filterMovies(movies, query, short);
@@ -74,7 +74,6 @@ function SavedMovies({
       isShortFilm ? filterDuration(moviesCardList) : moviesCardList
     );
   }, [savedMovies, isShortFilm, searchQuery]);
-
   return (
     <>
       <Header isLoggedIn={isLoggedIn} />
@@ -82,7 +81,7 @@ function SavedMovies({
         <SearchForm
           handleSearchMoviesFilms={handleSearchMoviesFilms}
           handleShortFilmToggle={handleShortFilmToggle}
-          isShortFilm={!isShortFilm}
+          isShortFilm={isShortFilm}
         />
         <MoviesCardList
           movies={filteredMovies}

@@ -3,11 +3,10 @@ import './AuthForm.css';
 import { Link } from 'react-router-dom';
 import Validation from '../../utils/Validation';
 import FormLabel from './FormLabel/FormLabel';
+import { emailValidationRegexp } from '../../utils/constants';
 
 const AuthForm = ({ isLoginForm, onLogin, onRegister, isSuccess }) => {
   const { values, errors, isValid, handleChange } = Validation();
-
-  console.log(isSuccess)
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -16,6 +15,7 @@ const AuthForm = ({ isLoginForm, onLogin, onRegister, isSuccess }) => {
 
   return (
     <form
+      noValidate
       name={isLoginForm ? 'login' : 'register'}
       className='form'
       onSubmit={handleSubmit}
@@ -37,6 +37,7 @@ const AuthForm = ({ isLoginForm, onLogin, onRegister, isSuccess }) => {
         handleChange={handleChange}
         values={values.email}
         errors={errors}
+        pattern={emailValidationRegexp}
       />
       <FormLabel
         title='Пароль'
@@ -53,6 +54,7 @@ const AuthForm = ({ isLoginForm, onLogin, onRegister, isSuccess }) => {
       <button
         type='submit'
         className={`form__submit ${!isValid && 'form__submit_disabled'}  ${!isLoginForm && 'form__submit_login'}`}
+        disabled={!isValid}
       >
         {isLoginForm ? 'Войти' : 'Зарегистрироваться'}
       </button>

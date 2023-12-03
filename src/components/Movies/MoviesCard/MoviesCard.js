@@ -1,3 +1,4 @@
+import { useEffect } from 'react';
 import { MoviesApi } from '../../../utils/constants';
 import LikeButton from './LikeButton/LikeButton'
 import './MoviesCard.css';
@@ -12,16 +13,16 @@ function MoviesCard({
   savedMovies,
 }) {
 
+  function handleDelete() {
+    return handleDeleteMovie(movie);
+  }
+
   function handleCardClick() {
     if (saved) {
       handleDeleteMovie(savedMovies.filter((m) => m.movieId === movie.id)[0]);
     } else {
       handleSaveMovie(movie);
     }
-  }
-
-  function handleDelete() {
-    return handleDeleteMovie(movie);
   }
 
 
@@ -42,15 +43,15 @@ function MoviesCard({
           />
         </a>
         {isSavedMovies ?
-                    (<LikeButton
-                        saved={saved}
-                        onClick={handleDelete}
-                    />) : (
-                        <LikeButton
-                            saved={saved}
-                            onClick={handleCardClick}
-                        />
-                    )}
+          (<LikeButton
+            saved={saved}
+            onClick={handleDelete}
+          />) : (
+            <LikeButton
+              saved={saved}
+              onClick={handleCardClick}
+            />
+          )}
       </section>
       <section className='movie__header'>
         <h2 className='movie__title'>{movie.nameRU}</h2>
