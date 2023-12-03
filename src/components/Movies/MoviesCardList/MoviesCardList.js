@@ -55,7 +55,7 @@ function MoviesCardList({
 
       <ul className='movies-card-list__container'>
         {isLoading && <Preloader />}
-        {isSearchHappened && movies.length === 0 && <p className='movies-card-list__nothing'>Ничего не найдено.</p>}
+        {!isLoading && isSearchHappened && movies.length === 0 && <p className='movies-card-list__nothing'>Ничего не найдено.</p>}
         {currentPath === "/saved-movies" ? (
           movies.slice(0, shownMovies).map(movie => (
             <MoviesCard
