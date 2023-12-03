@@ -3,7 +3,7 @@ import { useLocation } from 'react-router-dom';
 import MoviesCard from '../MoviesCard/MoviesCard';
 import Preloader from '../Preloader/Preloader';
 import { UserAgentContext } from '../../../contexts/UserAgentContext';
-import { userAgent } from "../../../utils/constants";
+import { UserAgent } from "../../../utils/constants";
 import './MoviesCardList.css';
 
 function MoviesCardList({
@@ -13,6 +13,7 @@ function MoviesCardList({
   handleSaveMovie,
   handleDeleteMovie,
   isLoading,
+  isSearchHappened
 }) {
 
   const currentPath = useLocation().pathname;
@@ -20,12 +21,12 @@ function MoviesCardList({
 
   const shownCount = () => {
     const display = window.innerWidth;
-    if (display >= userAgent.desktop.resolution) {
-      setShownMovies(userAgent.desktop.movies);
-    } else if (display >= userAgent.tablet.resolution) {
-      setShownMovies(userAgent.tablet.movies);
+    if (display >= UserAgent.desktop.resolutionForLoad) {
+      setShownMovies(UserAgent.desktop.movies);
+    } else if (display >= UserAgent.tablet.resolutionForLoad) {
+      setShownMovies(UserAgent.tablet.movies);
     } else {
-      setShownMovies(userAgent.mobile.movies);
+      setShownMovies(UserAgent.mobile.movies);
     }
   }
 
@@ -35,12 +36,12 @@ function MoviesCardList({
 
   const showMore = () => {
     const display = window.innerWidth;
-    if (display > 1024) {
-      setShownMovies(shownMovies + userAgent.desktop.more);
-    } else if (display > 750) {
-      setShownMovies(shownMovies + userAgent.tablet.more);
+    if (display > UserAgent.desktop.resolution) {
+      setShownMovies(shownMovies + UserAgent.desktop.more);
+    } else if (display > UserAgent.tablet.resolution) {
+      setShownMovies(shownMovies + UserAgent.tablet.more);
     } else {
-      setShownMovies(shownMovies + userAgent.mobile.more);
+      setShownMovies(shownMovies + UserAgent.mobile.more);
     }
   }
 
@@ -54,7 +55,7 @@ function MoviesCardList({
 
       <ul className='movies-card-list__container'>
         {isLoading && <Preloader />}
-        {movies.length === 0 && <p className='movies-card-list__nothing'>Ничего не найдено.</p>}
+        {isSearchHappened && movies.length === 0 && <p className='movies-card-list__nothing'>Ничего не найдено.</p>}
         {currentPath === "/saved-movies" ? (
           movies.slice(0, shownMovies).map(movie => (
             <MoviesCard

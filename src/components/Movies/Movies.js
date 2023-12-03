@@ -18,6 +18,7 @@ function Movies({
   const [isReqError, setisReqError] = useState(false);
   const [isNotFound, setIsNotFound] = useState(false);
   const [filteredMovies, setFilteredMovies] = useState([]);
+  const [isSearchHappened, setIsSearchHappened] = useState(false);
 
   const handleUpdateFilteredMovies = (movies, query, short) => {
     const moviesCardList = filterMovies(movies, query, short);
@@ -29,6 +30,7 @@ function Movies({
   }
 
   const handleShortFilmToggle = (query) => {
+    setIsSearchHappened(true)
     setIsNotShortFilm(!isNotShortFilm);
     localStorage.setItem("movieSearch", query);
     localStorage.setItem("notShortMovies", isNotShortFilm);
@@ -68,6 +70,7 @@ function Movies({
         .then((cardsData) => {
           handleUpdateFilteredMovies(cardsData, query, !isNotShortFilm);
           setisReqError(false);
+          setIsSearchHappened(true)
         })
         .catch((err) => {
           setisReqError(true);
@@ -132,6 +135,7 @@ function Movies({
           savedMovies={savedMovies}
           handleSaveMovie={handleSaveMovie}
           handleDeleteMovie={handleDeleteMovie}
+          isSearchHappened={isSearchHappened}
         />
       </main>
       <Footer />

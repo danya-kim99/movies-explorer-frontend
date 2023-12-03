@@ -2,7 +2,7 @@ import React, { useState, useContext, useEffect } from 'react';
 import './Profile.css';
 import Header from '../Header/Header';
 import Validation from '../../utils/Validation';
-import { emailValidationRegexp } from '../../utils/constants';
+import { EmailValidationRegexp } from '../../utils/constants';
 import { CurrentUserContext } from "../../contexts/CurrentUserContext";
 
 function Profile({
@@ -27,6 +27,13 @@ function Profile({
   const handleShowSuccess = () => {
     setShowSuccess(true);
   };
+
+  const handleSameDataCheck = () => {
+    return values.name === currentUser.name && values.email === currentUser.email
+  }
+
+
+  console.log(handleSameDataCheck())
 
   useEffect(() => {
     setValues({
@@ -77,7 +84,7 @@ function Profile({
             <span className='profile__input-title'>E-mail</span>
             <input
               className='profile__input'
-              pattern={emailValidationRegexp}
+              pattern={EmailValidationRegexp}
               type='email'
               name='email'
               onChange={handleChange}
@@ -99,7 +106,7 @@ function Profile({
             <button
               type='submit'
               className='profile__button profile__button_submit'
-              disabled={!isValid}
+              disabled={handleSameDataCheck() ?? !isValid }
             >
               Сохранить
             </button>

@@ -3,7 +3,7 @@ import './AuthForm.css';
 import { Link } from 'react-router-dom';
 import Validation from '../../utils/Validation';
 import FormLabel from './FormLabel/FormLabel';
-import { emailValidationRegexp } from '../../utils/constants';
+import { EmailValidationRegexp } from '../../utils/constants';
 
 const AuthForm = ({ isLoginForm, onLogin, onRegister, isSuccess }) => {
   const { values, errors, isValid, handleChange } = Validation();
@@ -37,7 +37,7 @@ const AuthForm = ({ isLoginForm, onLogin, onRegister, isSuccess }) => {
         handleChange={handleChange}
         values={values.email}
         errors={errors}
-        pattern={emailValidationRegexp}
+        pattern={EmailValidationRegexp}
       />
       <FormLabel
         title='Пароль'

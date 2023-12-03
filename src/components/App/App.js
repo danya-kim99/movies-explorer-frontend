@@ -4,7 +4,7 @@ import { CurrentUserContext } from '../../contexts/CurrentUserContext';
 import { UserAgentContext } from '../../contexts/UserAgentContext';
 import { moviesApi } from "../../utils/MoviesApi";
 import { mainApi } from '../../utils/MainApi';
-import { userAgent } from '../../utils/constants';
+import { UserAgent } from '../../utils/constants';
 import filterMovies from '../../utils/filterMovies';
 import ProtectedRoute from "../ProtectedRoute/ProtectedRoute";
 import Preloader from '../Movies/Preloader/Preloader';
@@ -55,9 +55,9 @@ const App = () => {
 
   useEffect(() => {
     const handleWidth = () => {
-      if (window.innerWidth > userAgent.tablet.resolution) {
+      if (window.innerWidth > UserAgent.tablet.resolution) {
         setDevice('desktop');
-      } else if (window.innerWidth > userAgent.mobile.resolution) {
+      } else if (window.innerWidth > UserAgent.mobile.resolution) {
         setDevice('tablet');
       } else {
         setDevice('mobile');
@@ -104,7 +104,7 @@ const App = () => {
     localStorage.removeItem("notShortMovies");
     localStorage.removeItem("allMovies");
     localStorage.clear();
-    navigate('/signin', { replace: true });
+    navigate('/', { replace: true });
   };
 
   useEffect(() => {
