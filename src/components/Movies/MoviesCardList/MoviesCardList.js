@@ -21,9 +21,9 @@ function MoviesCardList({
 
   const shownCount = () => {
     const display = window.innerWidth;
-    if (display >= UserAgent.desktop.resolutionForLoad) {
+    if (display > UserAgent.desktop.resolutionForLoad) {
       setShownMovies(UserAgent.desktop.movies);
-    } else if (display >= UserAgent.tablet.resolutionForLoad) {
+    } else if (display > UserAgent.tablet.resolutionForLoad) {
       setShownMovies(UserAgent.tablet.movies);
     } else {
       setShownMovies(UserAgent.mobile.movies);
@@ -36,9 +36,9 @@ function MoviesCardList({
 
   const showMore = () => {
     const display = window.innerWidth;
-    if (display > UserAgent.desktop.resolution) {
+    if (display > UserAgent.desktop.resolutionForLoad) {
       setShownMovies(shownMovies + UserAgent.desktop.more);
-    } else if (display > UserAgent.tablet.resolution) {
+    } else if (display > UserAgent.tablet.resolutionForLoad) {
       setShownMovies(shownMovies + UserAgent.tablet.more);
     } else {
       setShownMovies(shownMovies + UserAgent.mobile.more);
