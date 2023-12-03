@@ -4,7 +4,7 @@ import { mainApi } from '../../utils/MainApi';
 import './Login.css';
 import AuthForm from '../AuthForm/AuthForm';
 
-const Login = ({ onLogin, isLoggedIn, isSuccess }) => {
+const Login = ({ onLogin, isLoggedIn, isSuccess, isLoading }) => {
   const navigate = useNavigate();
 
   const handleSubmit = (values) => {
@@ -19,7 +19,7 @@ const Login = ({ onLogin, isLoggedIn, isSuccess }) => {
         onClick={() => navigate('/')}
       ></a>
       <h1 className='login__title'>Рады видеть!</h1>
-      <AuthForm isLoginForm={true} onLogin={handleSubmit} isSuccess={isSuccess}/>
+      <AuthForm isLoginForm={true} onLogin={handleSubmit} isSuccess={isSuccess} isLoading={isLoading}/>
     </main>
   );
 };

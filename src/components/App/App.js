@@ -71,6 +71,7 @@ const App = () => {
 
   const handleLogin = (values) => {
     const { email, password } = values;
+    setIsFormSubmitting(true);
     mainApi.authorize(email, password)
       .then((res) => {
         localStorage.setItem('token', res.token);
@@ -82,9 +83,13 @@ const App = () => {
         console.error(error);
         setIsSuccess(false);
       })
+      .finally(() => {
+        setIsFormSubmitting(false);
+      })
   };
   const handleRegister = (values) => {
     const { name, email, password } = values;
+    setIsFormSubmitting(true)
     mainApi.register(name, email, password)
       .then(() => {
         setIsSuccess(true);
@@ -92,6 +97,9 @@ const App = () => {
       })
       .catch((error) => {
         console.error(error);
+      })
+      .finally(() => {
+        setIsFormSubmitting(false);
       })
 
 
@@ -167,6 +175,7 @@ const App = () => {
       .catch((err) => {
         console.log(err);
       });
+      
   }
 
   return (
@@ -223,6 +232,7 @@ const App = () => {
                     isLoggedIn={isLoggedIn}
                     onRegister={handleRegister}
                     isSuccess={isSuccess}
+                    isLoading={isFormSubmitting}
                   />
                 }
               />
@@ -233,6 +243,7 @@ const App = () => {
                     isLoggedIn={isLoggedIn}
                     onLogin={handleLogin}
                     isSuccess={isSuccess}
+                    isLoading={isFormSubmitting}
                   />
                 }
               />

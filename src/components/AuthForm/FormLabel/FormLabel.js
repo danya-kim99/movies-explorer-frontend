@@ -1,7 +1,7 @@
 import React from 'react';
 import './FormLabel.css';
 
-const FormLabel = ({ title, name, values, handleChange, errors, minLength, maxLength, pattern }) => {
+const FormLabel = ({ title, name, values, handleChange, errors, minLength, maxLength, pattern, isLoading }) => {
   return (
     <label className='form-label'>
       <span className='form-label__input-name'>{title}</span>
@@ -16,6 +16,7 @@ const FormLabel = ({ title, name, values, handleChange, errors, minLength, maxLe
           value={values}
           pattern={pattern}
           required
+          disabled={isLoading}
         />
       <span className='form-label__span-error'>{errors[`${name}`]}</span>
     </label>

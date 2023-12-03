@@ -4,7 +4,7 @@ import { mainApi } from '../../utils/MainApi';
 import './Register.css';
 import AuthForm from '../AuthForm/AuthForm';
 
-const Register = ({ onRegister, isLoggedIn, isSuccess }) => {
+const Register = ({ onRegister, isLoggedIn, isSuccess, isLoading }) => {
   const navigate = useNavigate();
 
   const handleSubmit = (values) => {
@@ -18,7 +18,7 @@ const Register = ({ onRegister, isLoggedIn, isSuccess }) => {
         onClick={() => navigate('/')}
       ></a>
       <h1 className='register__title'>Добро пожаловать!</h1>
-      <AuthForm isLoginForm={false} onRegister={handleSubmit} isSuccess={isSuccess}/>
+      <AuthForm isLoginForm={false} onRegister={handleSubmit} isSuccess={isSuccess} isLoading={isLoading}/>
     </main>
   );
 };

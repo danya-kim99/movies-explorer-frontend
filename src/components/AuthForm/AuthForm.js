@@ -5,7 +5,7 @@ import Validation from '../../utils/Validation';
 import FormLabel from './FormLabel/FormLabel';
 import { EmailValidationRegexp } from '../../utils/constants';
 
-const AuthForm = ({ isLoginForm, onLogin, onRegister, isSuccess }) => {
+const AuthForm = ({ isLoginForm, onLogin, onRegister, isSuccess, isLoading }) => {
   const { values, errors, isValid, handleChange } = Validation();
 
   const handleSubmit = (e) => {
@@ -29,6 +29,7 @@ const AuthForm = ({ isLoginForm, onLogin, onRegister, isSuccess }) => {
           errors={errors}
           minLength={2}
           maxLength={30}
+          isLoading={isLoading}
         />
       )}
       <FormLabel
@@ -38,6 +39,7 @@ const AuthForm = ({ isLoginForm, onLogin, onRegister, isSuccess }) => {
         values={values.email}
         errors={errors}
         pattern={EmailValidationRegexp}
+        isLoading={isLoading}
       />
       <FormLabel
         title='Пароль'
@@ -47,6 +49,7 @@ const AuthForm = ({ isLoginForm, onLogin, onRegister, isSuccess }) => {
         errors={errors}
         minLength={2}
         maxLength={30}
+        isLoading={isLoading}
       />
       {!isSuccess && isLoginForm && <p className='form__error'>
         Что-то пошло не так...
