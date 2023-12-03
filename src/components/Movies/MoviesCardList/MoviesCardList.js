@@ -57,7 +57,7 @@ function MoviesCardList({
         {isLoading && <Preloader />}
         {!isLoading && isSearchHappened && movies.length === 0 && <p className='movies-card-list__nothing'>Ничего не найдено.</p>}
         {currentPath === "/saved-movies" ? (
-          movies.slice(0, shownMovies).map(movie => (
+          movies.map(movie => (
             <MoviesCard
               key={isSavedMovies ? movie._id : movie.id}
               saved={getSavedMovieCard(savedMovies, movie)}
@@ -89,7 +89,7 @@ function MoviesCardList({
         )}
       </ul>
       {
-        movies.length > shownMovies ? (
+        movies.length > shownMovies && currentPath !== "/saved-movies" ? (
           <button className='movies-card-list__expand' onClick={showMore} type='button' aria-label='Ещё'>
             Ещё
           </button>
