@@ -2,9 +2,7 @@ import React from 'react';
 import './FormLabel.css';
 
 const FormLabel = ({ title, name, values, handleChange, errors, minLength, maxLength, pattern }) => {
-  console.log(values)
   return (
-    
     <label className='form-label'>
       <span className='form-label__input-name'>{title}</span>
         <input

@@ -48,7 +48,7 @@ const AuthForm = ({ isLoginForm, onLogin, onRegister, isSuccess }) => {
         minLength={2}
         maxLength={30}
       />
-      {!isSuccess && <p className='form__error'>
+      {!isSuccess && isLoginForm && <p className='form__error'>
         Что-то пошло не так...
       </p>}
       <button

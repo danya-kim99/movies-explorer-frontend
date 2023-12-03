@@ -10,7 +10,6 @@ const Register = ({ onRegister, isLoggedIn, isSuccess }) => {
   const handleSubmit = (values) => {
     onRegister(values)
   }
-
   return (
     isLoggedIn ? <Navigate to="/" replace/> : 
     <main className='register'>
