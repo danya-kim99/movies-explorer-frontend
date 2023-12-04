@@ -82,6 +82,32 @@ function Movies({
     }
   }
 
+  const handleSearchMovies = (query) => {
+    localStorage.setItem("movieSearch", query);
+    localStorage.setItem("notShortMovies", isNotShortFilm);
+
+    if (localStorage.getItem("allMovies")) {
+      const movies = JSON.parse(localStorage.getItem("allMovies"));
+      handleUpdateFilteredMovies(movies, query, !isNotShortFilm);
+    } else {
+      setIsLoading(true);
+      moviesApi
+        .getMovies()
+        .then((cardsData) => {
+          handleUpdateFilteredMovies(cardsData, query, !isNotShortFilm);
+          setisReqError(false);
+          setIsSearchHappened(true)
+        })
+        .catch((err) => {
+          setisReqError(true);
+          console.log(err);
+        })
+        .finally(() => {
+          setIsLoading(false);
+        });
+    }
+  }
+
   useEffect(() => {
     if (JSON.parse(localStorage.getItem("notShortMovies")) === true) {
       setIsNotShortFilm(false);
@@ -122,7 +148,7 @@ function Movies({
       <Header isLoggedIn={isLoggedIn} />
       <main className='movies'>
         <SearchForm
-          handleSearchMoviesFilms={handleSearchMoviesFilms}
+          handleSearchMoviesFilms={handleSearchMovies}
           handleShortFilmToggle={handleShortFilmToggle}
           isShortFilm={!isNotShortFilm}
         />
