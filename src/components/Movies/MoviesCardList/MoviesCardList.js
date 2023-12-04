@@ -34,6 +34,13 @@ function MoviesCardList({
     shownCount();
   }, []);
 
+  useEffect(() => {
+    setTimeout(() => {
+      window.addEventListener("resize", shownCount);
+    }, 500);
+  });
+  
+
   const showMore = () => {
     const display = window.innerWidth;
     if (display > UserAgent.desktop.resolutionForLoad) {
