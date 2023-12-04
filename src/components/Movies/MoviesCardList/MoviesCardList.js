@@ -16,10 +16,23 @@ function MoviesCardList({
   isSearchHappened
 }) {
 
-  console.log(movies)
-
   const currentPath = useLocation().pathname;
   const [shownMovies, setShownMovies] = useState(0);
+
+  useEffect(() => {
+    const display = window.innerWidth;
+    let newShownMovies = shownMovies;
+    if (display > UserAgent.desktop.resolutionForLoad) {
+      newShownMovies =  UserAgent.desktop.movies;
+    }
+    else if (display > UserAgent.tablet.resolutionForLoad) {
+      newShownMovies = UserAgent.tablet.movies;
+    }
+    else {
+      newShownMovies = UserAgent.mobile.movies;
+    }
+    setShownMovies(newShownMovies);
+  }, [movies]);
 
   const shownCount = () => {
     const display = window.innerWidth;
@@ -36,13 +49,6 @@ function MoviesCardList({
     shownCount();
   }, []);
 
-  useEffect(() => {
-    setTimeout(() => {
-      window.addEventListener("resize", shownCount);
-    }, 500);
-  });
-  
-
   const showMore = () => {
     const display = window.innerWidth;
     if (display > UserAgent.desktop.resolutionForLoad) {
@@ -57,6 +63,8 @@ function MoviesCardList({
   const getSavedMovieCard = (savedMovies, card) => {
     return !!savedMovies?.find((m) => m.movieId === card.id);
   }
+
+  
 
   return (
     <section className='movies-card-list'>

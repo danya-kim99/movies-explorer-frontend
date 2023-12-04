@@ -105,6 +105,7 @@ function Movies({
           handleSaveMovie={handleSaveMovie}
           handleDeleteMovie={handleDeleteMovie}
           isSearchHappened={isSearchHappened}
+          isNewSearch={isNewSearch}
         />
       </main>
       <Footer />
