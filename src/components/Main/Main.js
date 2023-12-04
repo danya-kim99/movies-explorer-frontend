@@ -9,10 +9,10 @@ import Footer from '../Footer/Footer'
 
 
 
-const Main = () => {
+const Main = ({isLoggedIn}) => {
     return (
         <>
-            <Header />
+            <Header isLoggedIn={isLoggedIn}/>
             <main className='main'>
                 <Promo />
                 <AboutProject />

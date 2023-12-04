@@ -1,19 +1,25 @@
 import React from 'react';
+import { Navigate, useNavigate } from 'react-router-dom';
+import { mainApi } from '../../utils/MainApi';
 import './Login.css';
-import { useNavigate } from 'react-router-dom';
 import AuthForm from '../AuthForm/AuthForm';
 
-const Login = ({ onLogin, onRegister }) => {
+const Login = ({ onLogin, isLoggedIn, isSuccess, isLoading }) => {
   const navigate = useNavigate();
-  
+
+  const handleSubmit = (values) => {
+    onLogin(values)
+  }
+
   return (
+    isLoggedIn ? <Navigate to="/" replace/> : 
     <main className='login'>
       <a
         className='login__logo'
         onClick={() => navigate('/')}
       ></a>
       <h1 className='login__title'>Рады видеть!</h1>
-      <AuthForm isLoginForm={true} onLogin={onLogin} onRegister={onRegister} />
+      <AuthForm isLoginForm={true} onLogin={handleSubmit} isSuccess={isSuccess} isLoading={isLoading}/>
     </main>
   );
 };

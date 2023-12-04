@@ -3,18 +3,19 @@ import './AuthForm.css';
 import { Link } from 'react-router-dom';
 import Validation from '../../utils/Validation';
 import FormLabel from './FormLabel/FormLabel';
+import { EmailValidationRegexp } from '../../utils/constants';
 
-const Auth = ({ isLoginForm, onLogin, onRegister }) => {
-  const { values, errors, isValid, handleChange, resetForm } = Validation();
+const AuthForm = ({ isLoginForm, onLogin, onRegister, isSuccess, isLoading }) => {
+  const { values, errors, isValid, handleChange } = Validation();
 
-  const handleSubmit = (evt) => {
-    evt.preventDefault();
-    resetForm();
-    isLoginForm ? onLogin() : onRegister();
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    isLoginForm ? onLogin(values) : onRegister(values);
   };
 
   return (
     <form
+      noValidate
       name={isLoginForm ? 'login' : 'register'}
       className='form'
       onSubmit={handleSubmit}
@@ -24,34 +25,39 @@ const Auth = ({ isLoginForm, onLogin, onRegister }) => {
           title='Имя'
           name='name'
           handleChange={handleChange}
-          values={values}
+          values={values.name}
           errors={errors}
           minLength={2}
           maxLength={30}
+          isLoading={isLoading}
         />
       )}
       <FormLabel
         title='E-mail'
         name='email'
         handleChange={handleChange}
-        values={values}
+        values={values.email}
         errors={errors}
+        pattern={EmailValidationRegexp}
+        isLoading={isLoading}
       />
       <FormLabel
         title='Пароль'
         name='password'
         handleChange={handleChange}
-        values={values}
+        values={values.password}
         errors={errors}
         minLength={2}
         maxLength={30}
+        isLoading={isLoading}
       />
-      {false && <p className='form__error'> //заглушка
+      {!isSuccess && isLoginForm && <p className='form__error'>
         Что-то пошло не так...
       </p>}
       <button
         type='submit'
         className={`form__submit ${!isValid && 'form__submit_disabled'}  ${!isLoginForm && 'form__submit_login'}`}
+        disabled={!isValid}
       >
         {isLoginForm ? 'Войти' : 'Зарегистрироваться'}
       </button>
@@ -82,4 +88,4 @@ const Auth = ({ isLoginForm, onLogin, onRegister }) => {
   );
 };
 
-export default Auth;
+export default AuthForm;

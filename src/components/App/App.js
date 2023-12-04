@@ -1,7 +1,12 @@
-import { Route, Routes, useNavigate } from 'react-router-dom';
+import { Route, Routes, useNavigate, useLocation } from 'react-router-dom';
 import { Suspense, useEffect, useState } from 'react';
 import { CurrentUserContext } from '../../contexts/CurrentUserContext';
-import { UserAgentContext, windowWidth } from '../../contexts/UserAgentContext';
+import { UserAgentContext } from '../../contexts/UserAgentContext';
+import { moviesApi } from "../../utils/MoviesApi";
+import { mainApi } from '../../utils/MainApi';
+import { UserAgent } from '../../utils/constants';
+import filterMovies from '../../utils/filterMovies';
+import ProtectedRoute from "../ProtectedRoute/ProtectedRoute";
 import Preloader from '../Movies/Preloader/Preloader';
 import Main from '../Main/Main';
 import Movies from '../Movies/Movies';
@@ -11,18 +16,48 @@ import Profile from '../Profile/Profile';
 import Login from '../Login/Login';
 import SavedMovies from '../SavedMovies/SavedMovies';
 import './App.css'
-import { films } from '../../utils/constants';
+
 
 const App = () => {
+  const currentLocation = useLocation();
   const navigate = useNavigate();
-  const [currentUser, setCurrentUser] = useState({ name: 'Даниил', email: 'danya-kim@ya.ru' });
+  const [isLoading, setIsLoading] = useState(false);
+  const [isSuccess, setIsSuccess] = useState(true);
+  const [currentUser, setCurrentUser] = useState({ name: '', email: '' });
   const [device, setDevice] = useState('desktop');
+  const [savedMovies, setSavedMovies] = useState([]);
+  const [isLoggedIn, setisLoggedIn] = useState(true);
+  const [isFormSubmitting, setIsFormSubmitting] = useState(false);
+
+  useEffect(() => {
+    if (localStorage.getItem('token')) {
+      const token = localStorage.getItem('token');
+      mainApi
+        .checkToken(token)
+        .then((res) => {
+          if (res) {
+            setCurrentUser(res);
+            setisLoggedIn(true);
+            navigate(currentLocation.pathname, { replace: true });
+
+          }
+        })
+        .catch(() => {
+          setisLoggedIn(false);
+        })
+        .finally(() => {
+          setIsLoading(false);
+        });
+    } else {
+      setisLoggedIn(false);
+    }
+  }, [])
 
   useEffect(() => {
     const handleWidth = () => {
-      if (window.innerWidth > windowWidth.tablet) {
+      if (window.innerWidth > UserAgent.tablet.resolution) {
         setDevice('desktop');
-      } else if (window.innerWidth > windowWidth.mobile) {
+      } else if (window.innerWidth > UserAgent.mobile.resolution) {
         setDevice('tablet');
       } else {
         setDevice('mobile');
@@ -34,46 +69,170 @@ const App = () => {
     return () => window.removeEventListener('resize', handleWidth);
   }, [device]);
 
-  const handleLogin = () => {
-    setCurrentUser((prev) => ({ ...prev, isLoggedIn: true }));
-    navigate('/movies', { replace: true });
+  const handleLogin = (values) => {
+    const { email, password } = values;
+    setIsFormSubmitting(true);
+    mainApi.authorize(email, password)
+      .then((res) => {
+        localStorage.setItem('token', res.token);
+        setisLoggedIn(true);
+        setIsSuccess(true);
+        navigate('/movies', { replace: true });
+      })
+      .catch((error) => {
+        console.error(error);
+        setIsSuccess(false);
+      })
+      .finally(() => {
+        setIsFormSubmitting(false);
+      })
   };
-  const handleRegister = () => {
-    navigate('/signin');
+  const handleRegister = (values) => {
+    const { name, email, password } = values;
+    setIsFormSubmitting(true)
+    mainApi.register(name, email, password)
+      .then(() => {
+        setIsSuccess(true);
+        handleLogin(values);
+      })
+      .catch((error) => {
+        console.error(error);
+      })
+      .finally(() => {
+        setIsFormSubmitting(false);
+      })
+
+
   };
   const handleLogout = () => {
-    setCurrentUser((prev) => ({ ...prev, isLoggedIn: false }));
+    localStorage.removeItem('token');
+    setisLoggedIn(false);
+    localStorage.removeItem("movies");
+    localStorage.removeItem("movieSearch");
+    localStorage.removeItem("notShortMovies");
+    localStorage.removeItem("allMovies");
+    localStorage.clear();
     navigate('/', { replace: true });
   };
+
+  useEffect(() => {
+    if (isLoggedIn) {
+      mainApi
+        .getProfileInfo()
+        .then((userInfo) => {
+          setCurrentUser(userInfo);
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+      mainApi
+        .getMovies()
+        .then((moviesData) => {
+          setSavedMovies(moviesData.data);
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    }
+  }, [isLoggedIn, navigate]);
+
+  const handleUpdateUserInfo = (newData) => {
+    setIsFormSubmitting(true);
+    mainApi
+      .patchProfileInfo(newData)
+      .then((data) => {
+        setIsSuccess(true);
+        setCurrentUser(data.data);
+      })
+      .catch((err) => {
+        setIsSuccess(false);
+        console.log(err);
+      })
+      .finally(() => {
+        setIsFormSubmitting(false);
+      })
+  }
+
+  const handleSaveMovie = (movie) => {
+    mainApi
+      .postMovie(movie)
+      .then((newMovie) => {
+        setSavedMovies([newMovie, ...savedMovies]);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }
+
+  const handleDeleteMovie = (movie) => {
+    mainApi
+      .deleteMovie(movie._id)
+      .then(() => {
+        setSavedMovies((state) => {
+          return state.filter((item) => item._id !== movie._id)
+        })
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+      
+  }
 
   return (
     <CurrentUserContext.Provider value={currentUser}>
       <UserAgentContext.Provider value={device}>
-        <Suspense fallback={<Preloader/>}>
         <div className="app">
+          {isLoading ? (
+            <Preloader isPreloaderLoading={isLoading} position="main" />
+          ) : (
             <Routes>
               <Route
                 path='/'
-                element={<Main/>}
+                element={
+                  <Main
+                    isLoggedIn={isLoggedIn}
+                  />}
               />
               <Route
                 path='/movies'
-                element={<Movies list={films} />}
+                element={<ProtectedRoute
+                  element={Movies}
+                  savedMovies={savedMovies}
+                  isLoggedIn={isLoggedIn}
+                  handleDeleteMovie={handleDeleteMovie}
+                  handleSaveMovie={handleSaveMovie}
+                />}
               />
               <Route
                 path='/saved-movies'
-                element={<SavedMovies list={films} />} 
+                element={<ProtectedRoute
+                  element={SavedMovies}
+                  Component={SavedMovies}
+                  path='/saved-movies'
+                  isLoggedIn={isLoggedIn}
+                  savedMovies={savedMovies}
+                  handleDeleteMovie={handleDeleteMovie}
+                />}
               />
               <Route
                 path='/profile'
-                element={<Profile onLogout={handleLogout} />}
+                element={<ProtectedRoute
+                  element={Profile}
+                  isLoggedIn={isLoggedIn}
+                  isFormSubmitting={isFormSubmitting}
+                  handleSignOut={handleLogout}
+                  handleUpdateUserInfo={handleUpdateUserInfo}
+                  isSuccess={isSuccess}
+                />}
               />
               <Route
                 path='/signup'
                 element={
                   <Register
-                    onLogin={handleLogin}
+                    isLoggedIn={isLoggedIn}
                     onRegister={handleRegister}
+                    isSuccess={isSuccess}
+                    isLoading={isFormSubmitting}
                   />
                 }
               />
@@ -81,8 +240,10 @@ const App = () => {
                 path='/signin'
                 element={
                   <Login
+                    isLoggedIn={isLoggedIn}
                     onLogin={handleLogin}
-                    onRegister={handleRegister}
+                    isSuccess={isSuccess}
+                    isLoading={isFormSubmitting}
                   />
                 }
               />
@@ -91,8 +252,9 @@ const App = () => {
                 element={<NotFound />}
               />
             </Routes>
-          </div>  
-        </Suspense>
+          )}
+        </div>
+
       </UserAgentContext.Provider>
     </CurrentUserContext.Provider>
   );

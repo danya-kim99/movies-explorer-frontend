@@ -32,6 +32,12 @@
     color: #fff;
 }
 
+.movies-card-list__nothing {
+    color: #fff;
+    text-align: center;
+    margin: 0 auto;
+}
+
 @media screen and (max-width: 768px) {
 
 .movies-card-list__container {

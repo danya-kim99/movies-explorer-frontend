@@ -1,10 +1,30 @@
-import { useState } from 'react';
-import { useLocation } from 'react-router-dom';
+import { useEffect } from 'react';
+import { MoviesApi } from '../../../utils/constants';
+import LikeButton from './LikeButton/LikeButton'
 import './MoviesCard.css';
 
 
-function MoviesCard(props) {
-  const location = useLocation();
+function MoviesCard({
+  saved,
+  movie,
+  isSavedMovies,
+  handleSaveMovie,
+  handleDeleteMovie,
+  savedMovies,
+}) {
+
+  function handleDelete() {
+    return handleDeleteMovie(movie);
+  }
+
+  function handleCardClick() {
+    if (saved) {
+      handleDeleteMovie(savedMovies.filter((m) => m.movieId === movie.id)[0]);
+    } else {
+      handleSaveMovie(movie);
+    }
+  }
+
 
   function getTimeFromMins(mins) {
     let hours = Math.trunc(mins / 60);
@@ -12,34 +32,30 @@ function MoviesCard(props) {
     return `${hours}ч ${minutes}м`;
   }
 
-  const [isLiked, setLike] = useState(false);
-
-  function handleCardLike() {
-    setLike(!isLiked);
-  }
-
-  const cardButtonClassName = location.pathname === '/saved-movies'
-    ? 'movie__remove'
-    : !isLiked ? 'movie__like' : 'movie__like_active'
-
   return (
     <li className='movie'>
       <section className='movie__card'>
-        <img
-          className='movie__picture'
-          src={props.card.image}
-          alt={`Фильм под названием ${props.card.nameRU}`}
-        />
-        <button
-          className={cardButtonClassName}
-          type='button'
-          onClick={handleCardLike}
-          >
-        </button>
+        <a href={movie.trailerLink} target='blank'>
+          <img
+            src={isSavedMovies ? movie.image : `${MoviesApi.baseUrl}/${movie.image.url}`}
+            className='movie__picture'
+            alt={`Фильм под названием ${movie.nameRU}`}
+          />
+        </a>
+        {isSavedMovies ?
+          (<LikeButton
+            saved={saved}
+            onClick={handleDelete}
+          />) : (
+            <LikeButton
+              saved={saved}
+              onClick={handleCardClick}
+            />
+          )}
       </section>
       <section className='movie__header'>
-        <h2 className='movie__title'>{props.card.nameRU}</h2>
-        <p className='movie__duration'>{getTimeFromMins(props.card.duration)}</p>
+        <h2 className='movie__title'>{movie.nameRU}</h2>
+        <p className='movie__duration'>{getTimeFromMins(movie.duration)}</p>
       </section>
     </li>
   );

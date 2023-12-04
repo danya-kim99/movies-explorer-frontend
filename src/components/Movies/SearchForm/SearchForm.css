@@ -69,6 +69,12 @@
     color: #fff;
 }
 
+.search-form__error {
+    color: #EE3465;
+    text-align: center;
+    font-size: 14px;
+}
+
 .search-form__tumbler {
     position: absolute;
     opacity: 0;
@@ -87,7 +93,7 @@
     height: 14px;
     margin-left: 4%;
     transition: 250ms;
-    background-color: #2be080;
+    background-color: #EBEBEB;
     cursor: pointer;
     border-radius: 20px;
 }
@@ -97,7 +103,7 @@
     position: absolute;
     top: 50%;
     left: 2px;
-    transform: translate(0, -50%);
+    transform: translate(200%, -50%);
     box-sizing: border-box;
     width: 10px;
     height: 10px;
@@ -107,11 +113,11 @@
 }
 
 .search-form__tumbler:checked+.search-form__tumbler-visible {
-    background-color: #EBEBEB;
+    background-color: #2be080;
 }
 
 .search-form__tumbler:checked+.search-form__tumbler-visible::before {
-    transform: translate(200%, -50%);
+    transform: translate(0, -50%);
 }
 
 
