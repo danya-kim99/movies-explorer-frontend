@@ -110,9 +110,9 @@ function Movies({
 
   useEffect(() => {
     if (JSON.parse(localStorage.getItem("notShortMovies")) === true) {
-      setIsNotShortFilm(false);
-    } else {
       setIsNotShortFilm(true);
+    } else {
+      setIsNotShortFilm(false);
     }
   }, []);
 
@@ -127,7 +127,7 @@ function Movies({
       handleShortFilmToggle(query); 
     } else if (checkbox === false) {
       setIsNotShortFilm(false);
-      handleSearchMoviesFilms(query);
+      handleSearchMovies(query);
     }
   }, [])
 
