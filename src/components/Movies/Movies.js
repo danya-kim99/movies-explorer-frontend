@@ -11,7 +11,8 @@ function Movies({
   savedMovies,
   isLoggedIn,
   handleDeleteMovie,
-  handleSaveMovie, }) {
+  handleSaveMovie,
+}) {
 
   const [isLoading, setIsLoading] = useState(false);
   const [isShortFilm, setIsShortFilm] = useState(localStorage.getItem("isShortFilm") ? JSON.parse(localStorage.getItem("isShortFilm")) : false);
