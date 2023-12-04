@@ -3,7 +3,7 @@ import SearchForm from '../Movies/SearchForm/SearchForm';
 import MoviesCardList from '../Movies/MoviesCardList/MoviesCardList';
 import Header from '../Header/Header';
 import Footer from '../Footer/Footer';
-import { moviesApi } from '../../utils/MoviesApi';
+import { mainApi } from '../../utils/MainApi';
 import { filterMovies, filterDuration } from "../../utils/filterMovies";
 import './SavedMovies.css';
 
@@ -16,20 +16,20 @@ function SavedMovies({
   const [filteredMovies, setFilteredMovies] = useState(savedMovies);
   const [isShortFilm, setIsShortFilm] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
+  const [isSearchHappened, setIsSearchHappened] = useState(false);
 
   const handleUpdateFilteredMovies = (movies, query, short) => {
     const moviesCardList = filterMovies(movies, query, short);
-
-    setFilteredMovies(moviesCardList);
     setFilteredMovies(short ? filterDuration(moviesCardList) : moviesCardList);
     setSearchQuery(query);
+    setIsSearchHappened(true);
   }
 
   const handleShortFilmToggle = (query) => {
     setIsShortFilm(isShortFilm);
 
-    if (localStorage.getItem("movies")) {
-      const movies = JSON.parse(localStorage.getItem("movies"));
+    if (localStorage.getItem("savedMovies")) {
+      const movies = JSON.parse(localStorage.getItem("savedMovies"));
       const moviesCardList = filterMovies(movies, query, isShortFilm);
 
       setFilteredMovies(isShortFilm ? filterDuration(moviesCardList) : moviesCardList);
@@ -50,14 +50,15 @@ function SavedMovies({
   }
 
   const handleSearchMoviesFilms = (query) => {
-    if (localStorage.getItem("movies")) {
-      const movies = JSON.parse(localStorage.getItem("movies"));
+    if (localStorage.getItem("savedMovies")) {
+      const movies = JSON.parse(localStorage.getItem("savedMovies"));
       handleUpdateFilteredMovies(movies, query, isShortFilm);
     } else {
-      moviesApi
+      mainApi
         .getMovies()
         .then((cardsData) => {
-          handleUpdateFilteredMovies(cardsData, query, isShortFilm);
+          localStorage.setItem("savedMovies", JSON.stringify(cardsData.data))
+          handleUpdateFilteredMovies(cardsData.data, query, isShortFilm);
         })
         .catch((err) => {
           console.log(err);
@@ -88,6 +89,7 @@ function SavedMovies({
           isSavedMovies={true}
           savedMovies={savedMovies}
           handleDeleteMovie={handleDeleteMovie}
+          isSearchHappened={isSearchHappened}
         >
         </MoviesCardList>
       </main>

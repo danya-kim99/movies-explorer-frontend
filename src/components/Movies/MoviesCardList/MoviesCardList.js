@@ -16,6 +16,8 @@ function MoviesCardList({
   isSearchHappened
 }) {
 
+  console.log(movies)
+
   const currentPath = useLocation().pathname;
   const [shownMovies, setShownMovies] = useState(0);
 

@@ -32,9 +32,6 @@ function Profile({
     return values.name === currentUser.name && values.email === currentUser.email
   }
 
-
-  console.log(handleSameDataCheck())
-
   useEffect(() => {
     setValues({
       ...values,

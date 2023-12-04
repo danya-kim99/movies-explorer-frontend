@@ -14,9 +14,7 @@ function Movies({
   handleSaveMovie, }) {
 
   const [isLoading, setIsLoading] = useState(false);
-  const [isNotShortFilm, setIsNotShortFilm] = useState(false);
-  const [isReqError, setisReqError] = useState(false);
-  const [isNotFound, setIsNotFound] = useState(false);
+  const [isShortFilm, setIsShortFilm] = useState(localStorage.getItem("isShortFilm") ? JSON.parse(localStorage.getItem("isShortFilm")) : false);
   const [filteredMovies, setFilteredMovies] = useState([]);
   const [isSearchHappened, setIsSearchHappened] = useState(false);
 
@@ -24,82 +22,53 @@ function Movies({
     const moviesCardList = filterMovies(movies, query, short);
 
     setFilteredMovies(short ? filterDuration(moviesCardList) : moviesCardList);
-
-    localStorage.setItem("movies", JSON.stringify(moviesCardList));
-    localStorage.setItem("allMovies", JSON.stringify(movies));
-  }
-
-  const handleShortFilmToggle = (query) => {
-    setIsSearchHappened(true)
-    setIsNotShortFilm(!isNotShortFilm);
-    localStorage.setItem("movieSearch", query);
-    localStorage.setItem("notShortMovies", isNotShortFilm);
-
-    if (localStorage.getItem("allMovies")) {
-      const movies = JSON.parse(localStorage.getItem("allMovies"));
-      const moviesCardList = filterMovies(movies, query, isNotShortFilm);
-
-      setFilteredMovies(isNotShortFilm ? filterDuration(moviesCardList) : moviesCardList);
-
-      localStorage.setItem("movies", JSON.stringify(moviesCardList));
-
-      if (!isNotShortFilm) {
-        if (filterDuration(movies).length === 0) {
-          setFilteredMovies(filterDuration(movies));
-        } else {
-          setFilteredMovies(filterDuration(movies));
-        }
-      } else {
-        setFilteredMovies(movies);
-      }
-    }
-    handleSearchMoviesFilms(query);
-  }
-
-  const handleSearchMoviesFilms = (query) => {
-    localStorage.setItem("movieSearch", query);
-    localStorage.setItem("notShortMovies", !isNotShortFilm);
-
-    if (localStorage.getItem("allMovies")) {
-      const movies = JSON.parse(localStorage.getItem("allMovies"));
-      handleUpdateFilteredMovies(movies, query, isNotShortFilm);
-    } else {
-      setIsLoading(true);
-      moviesApi
-        .getMovies()
-        .then((cardsData) => {
-          handleUpdateFilteredMovies(cardsData, query, !isNotShortFilm);
-          setisReqError(false);
-          setIsSearchHappened(true)
-        })
-        .catch((err) => {
-          setisReqError(true);
-          console.log(err);
-        })
-        .finally(() => {
-          setIsLoading(false);
-        });
-    }
+    setIsSearchHappened(true);
   }
 
   const handleSearchMovies = (query) => {
-    localStorage.setItem("movieSearch", query);
-    localStorage.setItem("notShortMovies", isNotShortFilm);
+    localStorage.setItem('movieSearch', query);
+    localStorage.setItem("isShortFilm", isShortFilm);
 
     if (localStorage.getItem("allMovies")) {
       const movies = JSON.parse(localStorage.getItem("allMovies"));
-      handleUpdateFilteredMovies(movies, query, !isNotShortFilm);
+      handleUpdateFilteredMovies(movies, query, isShortFilm);
     } else {
       setIsLoading(true);
       moviesApi
         .getMovies()
         .then((cardsData) => {
-          handleUpdateFilteredMovies(cardsData, query, !isNotShortFilm);
-          setisReqError(false);
+          localStorage.setItem("allMovies", JSON.stringify(cardsData));
+          handleUpdateFilteredMovies(cardsData, query, isShortFilm);
           setIsSearchHappened(true)
         })
         .catch((err) => {
-          setisReqError(true);
+          console.log(err);
+        })
+        .finally(() => {
+          setIsLoading(false);
+        });
+    }
+  }
+
+  const handleShortFilmToggle = (query) => {
+    const newIsShortFilm = !isShortFilm;
+    setIsShortFilm(newIsShortFilm);
+    localStorage.setItem('movieSearch', query);
+    localStorage.setItem("isShortFilm", newIsShortFilm);
+
+    if (localStorage.getItem("allMovies")) {
+      const movies = JSON.parse(localStorage.getItem("allMovies"));
+      handleUpdateFilteredMovies(movies, query, newIsShortFilm);
+    } else {
+      setIsLoading(true);
+      moviesApi
+        .getMovies()
+        .then((cardsData) => {
+          localStorage.setItem("allMovies", JSON.stringify(cardsData));
+          handleUpdateFilteredMovies(cardsData, query, newIsShortFilm);
+          setIsSearchHappened(true)
+        })
+        .catch((err) => {
           console.log(err);
         })
         .finally(() => {
@@ -109,39 +78,15 @@ function Movies({
   }
 
   useEffect(() => {
-    if (JSON.parse(localStorage.getItem("notShortMovies")) === true) {
-      setIsNotShortFilm(true);
-    } else {
-      setIsNotShortFilm(false);
-    }
-  }, []);
-
-  useEffect(() => {
-    const movies = JSON.parse(localStorage.getItem("movies"));
-
-    const checkbox = JSON.parse(localStorage.getItem("notShortMovies"));
-    const query = localStorage.getItem("movieSearch");
-
-    if (checkbox === true) {
-      setIsNotShortFilm(true);
-      handleShortFilmToggle(query); 
-    } else if (checkbox === false) {
-      setIsNotShortFilm(false);
-      handleSearchMovies(query);
+    if (localStorage.getItem("isShortFilm")) {
+      const newIsShortFilm = JSON.parse(localStorage.getItem("isShortFilm"));
+      setIsShortFilm(newIsShortFilm);
+      handleSearchMovies(localStorage.getItem("movieSearch") ? localStorage.getItem("movieSearch") : '')
     }
   }, [])
 
   useEffect(() => {
-    if (localStorage.getItem("movieSearch")) {
-      if (filteredMovies.length === 0) {
-        setIsNotFound(true);
-      } else {
-        setIsNotFound(false);
-      }
-    } else {
-      setIsNotFound(false);
-    }
-  }, [filteredMovies]);
+  }, [isShortFilm])
 
   return (
     <>
@@ -150,14 +95,12 @@ function Movies({
         <SearchForm
           handleSearchMoviesFilms={handleSearchMovies}
           handleShortFilmToggle={handleShortFilmToggle}
-          isShortFilm={!isNotShortFilm}
+          isShortFilm={isShortFilm}
         />
         <MoviesCardList
           movies={filteredMovies}
           isLoading={isLoading}
           isSavedMovies={false}
-          isReqError={isReqError}
-          isNotFound={isNotFound}
           savedMovies={savedMovies}
           handleSaveMovie={handleSaveMovie}
           handleDeleteMovie={handleDeleteMovie}
